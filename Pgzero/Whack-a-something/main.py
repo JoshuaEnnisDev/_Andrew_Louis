@@ -52,7 +52,7 @@ def update():
         if rand == 1:
             slime.x = hole.x
             slime.y = hole.y - 20
-            animate(slime, tween='end_elastic', pos=(slime.x, slime.y - 50))
+            animate(slime, tween='decelerate', pos=(slime.x, slime.y - 50))
         elif rand == 2:
             slime.x = hole2.x
             slime.y = hole2.y
