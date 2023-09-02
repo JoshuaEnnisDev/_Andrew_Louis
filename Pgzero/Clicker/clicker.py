@@ -14,14 +14,14 @@ bomb.x = WIDTH / 2
 bomb.y = HEIGHT / 2
 bomb.destruction = 1
 
-bomb_upgrade = Actor('buttonred', (100, 550))
-bomb_upgrade.disabled = False
+button_red = Actor('buttonred', (100, 550))
+button_red.cost = 10
 
 
 # draw function automatically called 60 times per second
 def draw():
     bomb.draw()
-    bomb_upgrade.draw()
+    button_red.draw()
     screen.draw.text(f"Destruction: {total_destruction}", (20, 20))
 
 
@@ -37,10 +37,11 @@ def on_mouse_down(pos):
         bomb.image = 'bombflash'
         total_destruction += bomb.destruction
 
+
 def on_mouse_up(pos):
     if bomb.collidepoint(pos):
         bomb.image = 'bomb'
-
+        
 
 # last line
 go()
