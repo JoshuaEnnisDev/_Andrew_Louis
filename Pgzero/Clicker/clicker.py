@@ -4,7 +4,7 @@ from pgzrun import go
 # basic setup
 WIDTH = 800
 HEIGHT = 600
-TITLE = 'clicker'
+TITLE = 'WMD Clicker'
 
 total_destruction = 0
 
@@ -25,6 +25,10 @@ def draw():
     screen.draw.text(f"Destruction: {total_destruction}", (20, 20))
 
 
+def reset_button(button, image):
+    button.image = image
+
+
 # gets called 60 times per second
 def update():
     screen.fill((25, 103, 105))
@@ -37,11 +41,19 @@ def on_mouse_down(pos):
         bomb.image = 'bombflash'
         total_destruction += bomb.destruction
 
+    if button_red.collidepoint(pos) and total_destruction >= 10:
+        button_red.image = "buttonred_pressed"
+        bomb.destruction += 1
+        total_destruction -= 10
+
 
 def on_mouse_up(pos):
     if bomb.collidepoint(pos):
         bomb.image = 'bomb'
-        
+
+    if button_red.collidepoint(pos):
+        button_red.image = "buttonred"
+
 
 # last line
 go()
