@@ -1,5 +1,4 @@
 import pgzrun
-import pygame
 from random import randint
 
 # settings
@@ -13,18 +12,24 @@ player.speed = 4
 player.bullet_speed = 5
 player.bullets = []
 
-enemy1 = Actor("enemyblack1")
-enemy2 = pygame.Surface((100, 100))
-enemy_rect = enemy2.get_rect(center=(100, 100))
-enemy3 = Actor(enemy_rect)
-enemy1.x = randint(50, 950)
+enemies = []
+# create 10 enemy actors
+for i in range(10):
+    enemy = Actor("enemyblack1")
+    enemy.x = randint(50, 950)
+    # add enemy to the enemies list
+    enemies.append(enemy)
 
 
 def draw():
     screen.clear()
     player.draw()
-    enemy1.draw()
-
+    
+    # draw all enemies in the list
+    for enemy in enemies:
+        enemy.draw()
+        
+    # draws all bullets in the list    
     for bullet in player.bullets:
         bullet.draw()
 
@@ -47,6 +52,12 @@ def update():
         bullet.y -= player.bullet_speed
         if bullet.y <= 0:
             player.bullets.remove(bullet)
+    #------collisions------
+    # bullet and enemy
+    for enemy in enemies:
+        if enemy.collidelist(player.bullets) != -1:
+            player.bullets.pop(0)
+            enemies.remove(enemy)
 
 
 def on_key_down():
@@ -55,6 +66,7 @@ def on_key_down():
         bullet.angle = 90
         bullet.x = player.x
         bullet.y = player.top
+        # add bullet to listy=
         player.bullets.append(bullet)
 
 
