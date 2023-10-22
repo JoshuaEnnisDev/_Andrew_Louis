@@ -6,35 +6,54 @@ WIDTH = 1000
 HEIGHT = 600
 TITLE = "Space Game"
 
-enemy_cooldown = 60  # 1 time per second
-
 # actors
 player = Actor("player", (500, 550))
 player.speed = 4
 player.bullet_speed = 5
 player.bullets = []
 
-enemies = []
+enemies = [] # each enemy has a cooldown and a bullet list
 # create 10 enemy actors
 for i in range(10):
     enemy = Actor("enemyblack1")
     enemy.cooldown = 60
+    enemy.bullets = []
     enemy.x = i * 100 + 50
     # add enemy to the enemies list
     enemies.append(enemy)
 
 
 def enemy_ai():
-
     for enemy in enemies:
         enemy.cooldown -= 1
         if enemy.cooldown <= 0:
             enemy.cooldown = 60
-            rand = randint(1, 2)
-            if rand == 1:
+            rand = randint(1, 5)
+            if rand < 4:
                 enemy.y += 50
-            elif rand == 2:
-                print("shoot a bullet")
+            else:
+                bullet = Actor("bullet")
+                bullet.angle = 180
+                bullet.speed = randint(1, 4)
+                bullet.pos = enemy.pos
+                enemy.bullets.append(bullet)
+
+
+def move_enemy_bullets():
+    for enemy in enemies:
+        for bullet in enemy.bullets:
+            bullet.y += bullet.speed
+
+
+def bound_player():
+    if player.left < 0:
+        player.left = 0
+    if player.top <= 0:
+        player.top = 0
+    if player.right >= WIDTH:
+        player.right = WIDTH
+    if player.bottom > HEIGHT:
+        player.bottom = HEIGHT
 
 
 def move_player():
@@ -59,6 +78,8 @@ def draw():
     # draw all enemies in the list
     for enemy in enemies:
         enemy.draw()
+        for bullet in enemy.bullets:
+            bullet.draw()
 
     # draws all bullets in the list
     for bullet in player.bullets:
@@ -68,6 +89,8 @@ def draw():
 def update():
     move_player()
     enemy_ai()
+    move_enemy_bullets()
+    bound_player()
     # move the bullets
     for bullet in player.bullets:
         bullet.y -= player.bullet_speed
