@@ -12,7 +12,8 @@ player.speed = 4
 player.bullet_speed = 5
 player.bullets = []
 
-enemies = []  # each enemy has a cooldown and a bullet list
+enemies = [[], [], []]  # each enemy has a cooldown and a bullet list
+random_formation = randint(0, len(enemies) - 1)
 # create 10 enemy actors
 for i in range(10):
     enemy = Actor("enemyblack1")
@@ -20,11 +21,26 @@ for i in range(10):
     enemy.bullets = []
     enemy.x = i * 100 + 50
     # add enemy to the enemies list
-    enemies.append(enemy)
+    enemies[0].append(enemy)
+for i in range(10):
+    enemy = Actor("enemyblue2")
+    enemy.cooldown = 60
+    enemy.bullets = []
+    enemy.x = i * 100 + 50
+    # add enemy to the enemies list
+    enemies[1].append(enemy)
+for i in range(10):
+    enemy = Actor("enemygreen1")
+    enemy.cooldown = 60
+    enemy.bullets = []
+    enemy.x = i * 100 + 50
+    # add enemy to the enemies list
+    enemies[2].append(enemy)
 
 
 def enemy_ai():
-    for enemy in enemies:
+    global random_formation
+    for enemy in enemies[random_formation]:
         enemy.cooldown -= 1
         if enemy.cooldown <= 0:
             enemy.cooldown = 60
@@ -40,7 +56,8 @@ def enemy_ai():
 
 
 def move_enemy_bullets():
-    for enemy in enemies:
+    global random_formationaaa 
+    for enemy in enemies[random_formation]:
         for bullet in enemy.bullets:
             bullet.y += bullet.speed
 
@@ -72,11 +89,12 @@ def move_player():
 
 
 def draw():
+    global random_formation
     screen.clear()
     player.draw()
 
     # draw all enemies in the list
-    for enemy in enemies:
+    for enemy in enemies[random_formation]:
         enemy.draw()
         for bullet in enemy.bullets:
             bullet.draw()
@@ -87,10 +105,13 @@ def draw():
 
 
 def update():
+    global random_formation
     move_player()
     enemy_ai()
     move_enemy_bullets()
     bound_player()
+    if len(enemies[random_formation]) == 0:
+        random_formation = randint(0, len(enemies) - 1)
     # move the bullets
     for bullet in player.bullets:
         bullet.y -= player.bullet_speed
@@ -98,10 +119,10 @@ def update():
             player.bullets.remove(bullet)
     # ------collisions------
     # bullet and enemy
-    for enemy in enemies:
+    for enemy in enemies[random_formation]:
         if enemy.collidelist(player.bullets) != -1:
             player.bullets.pop(0)
-            enemies.remove(enemy)
+            enemies[random_formation].remove(enemy)
 
 
 def on_key_down():
