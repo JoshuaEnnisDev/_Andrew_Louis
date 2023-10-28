@@ -6,6 +6,8 @@ WIDTH = 1000
 HEIGHT = 600
 TITLE = "Space Game"
 
+game_over = False
+
 # actors
 player = Actor("player", (500, 550))
 player.speed = 4
@@ -13,11 +15,13 @@ player.bullet_speed = 5
 player.bullets = []
 
 enemies = []  # each enemy has a cooldown and a bullet list
+upgrades = []  # holds our powerups
 # create 10 enemy actors
 for i in range(10):
     enemy = Actor("enemyblack1")
     enemy.cooldown = 60
     enemy.bullets = []
+    enemy.drop_chance = randint(0, 100)
     enemy.x = i * 100 + 50
     # add enemy to the enemies list
     enemies.append(enemy)
@@ -73,17 +77,24 @@ def move_player():
 
 def draw():
     screen.clear()
-    player.draw()
+    if not game_over:
+        player.draw()
 
-    # draw all enemies in the list
-    for enemy in enemies:
-        enemy.draw()
-        for bullet in enemy.bullets:
+        # draw all enemies in the list
+        for enemy in enemies:
+            enemy.draw()
+            for bullet in enemy.bullets:
+                bullet.draw()
+
+        # draws all bullets in the list
+        for bullet in player.bullets:
             bullet.draw()
 
-    # draws all bullets in the list
-    for bullet in player.bullets:
-        bullet.draw()
+        for drop in upgrades:
+            drop.draw()
+
+    else:
+        screen.draw.text("Game Over", (450, 300), fontsize=45)
 
 
 def update():
@@ -91,6 +102,10 @@ def update():
     enemy_ai()
     move_enemy_bullets()
     bound_player()
+    global game_over
+    
+    for powerup in upgrades:
+        powerup.y += 3
     # move the bullets
     for bullet in player.bullets:
         bullet.y -= player.bullet_speed
@@ -101,7 +116,16 @@ def update():
     for enemy in enemies:
         if enemy.collidelist(player.bullets) != -1:
             player.bullets.pop(0)
+            add_powerup(enemy.pos, enemy.drop_chance)
             enemies.remove(enemy)
+        if player.collidelist(enemy.bullets) != -1:
+            game_over = True
+
+
+def add_powerup(pos, drop_chance):
+    if drop_chance < 80:
+        drop = Actor("bolt", pos)
+        upgrades.append(drop)
 
 
 def on_key_down():
