@@ -12,7 +12,7 @@ player.speed = 4
 player.bullet_speed = 5
 player.bullets = []
 
-enemies = [] # each enemy has a cooldown and a bullet list
+enemies = []  # each enemy has a cooldown and a bullet list
 # create 10 enemy actors
 for i in range(10):
     enemy = Actor("enemyblack1")
