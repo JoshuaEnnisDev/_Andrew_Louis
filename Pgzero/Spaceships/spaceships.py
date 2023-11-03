@@ -123,7 +123,7 @@ def update():
 
 
 def add_powerup(pos, drop_chance):
-    if drop_chance < 80:
+    if drop_chance < 20:
         drop = Actor("bolt", pos)
         upgrades.append(drop)
 
