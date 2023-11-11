@@ -1,5 +1,6 @@
 import pgzrun
 from random import randint
+from pgzhelper import *
 
 # settings
 WIDTH = 1000
@@ -13,6 +14,7 @@ player = Actor("player", (500, 550))
 player.speed = 4
 player.bullet_speed = 5
 player.bullets = []
+player.bullet_powerup = False
 
 enemies = []  # each enemy has a cooldown and a bullet list
 upgrades = []  # holds our powerups
@@ -106,9 +108,19 @@ def update():
     
     for powerup in upgrades:
         powerup.y += 3
+        if player.colliderect(powerup):
+            # give the player a powerup
+            player.bullet_powerup = True
+            # remove the power from the list
+            upgrades.remove(powerup)
+            
     # move the bullets
-    for bullet in player.bullets:
-        bullet.y -= player.bullet_speed
+    for i, bullet in enumerate(player.bullets):
+        if player.bullet_powerup:
+            bullet.move_forward(player.bullet_speed)
+        else:
+            # moves the one bullet
+            bullet.y -= player.bullet_speed
         if bullet.y <= 0:
             player.bullets.remove(bullet)
     # ------collisions------
@@ -130,12 +142,20 @@ def add_powerup(pos, drop_chance):
 
 def on_key_down():
     if keyboard.space:
-        bullet = Actor("bullet")
-        bullet.angle = 90
-        bullet.x = player.x
-        bullet.y = player.top
-        # add bullet to list
-        player.bullets.append(bullet)
+        if player.bullet_powerup:
+            for i in range(3):
+                bullet = Actor("bullet")
+                bullet.x = player.x
+                bullet.y = player.top
+                bullet.angle = i * 45 + 45
+                player.bullets.append(bullet)
+        else:
+            bullet = Actor("bullet")
+            bullet.angle = 90
+            bullet.x = player.x
+            bullet.y = player.top
+            # add bullet to list
+            player.bullets.append(bullet)
 
 
 pgzrun.go()
