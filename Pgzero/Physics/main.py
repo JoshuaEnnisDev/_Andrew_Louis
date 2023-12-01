@@ -1,10 +1,11 @@
 import pgzrun
 
 # x, y, width, height
-shield = Rect(0, 0, 50, 50)
+
 shield_color = (70, 100, 120)
 
 player = Actor("ufoblue")
+shield = Rect(player.right, player.top, 50, 50)
 
 
 def draw():
