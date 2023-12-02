@@ -66,6 +66,12 @@ class Actor(Actor):
 
         return 360 + angle
 
+    def rotate_with(self, actor, radius):
+        self.pos = (
+            actor.x + radius * math.cos(math.radians(actor.angle)),
+            actor.y - radius * math.sin(math.radians(actor.angle))
+        )
+
     def move_towards(self, actor, dist):
         angle = math.radians(self.direction_to(actor))
         dx = dist * math.cos(angle)
