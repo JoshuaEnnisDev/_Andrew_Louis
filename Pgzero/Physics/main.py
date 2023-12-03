@@ -41,7 +41,7 @@ def draw():
 def on_mouse_move(pos):
     player.angle = player.angle_to(pos)
     laser.angle = player.angle + 90
-    laser.rotate_with(player, 50)
+    laser.rotate_with(player, 100)
 
 
 def update():
