@@ -2,7 +2,6 @@ import pgzrun
 import random
 from pgzhelper import Actor
 
-# Bases everywhere but ther dirt path
 
 # Screen Setup
 WIDTH = 1920
@@ -11,6 +10,11 @@ TITLE = "Tower Defense"
 
 # Create actors
 floor = Actor("td1920x1080")
+
+WAYPOINTS = [
+    {"rect": Rect(200, 700, 200, 50), "angle": 0},
+    {"rect": Rect(700, 700, 50, 200), "angle": 90},
+]
 
 
 def is_on_path(x, y):
@@ -26,7 +30,7 @@ def is_on_path(x, y):
         return True
     if 1250 < x < WIDTH and 350 < y < 600:
         return True
-    
+
     return False
 
 
@@ -47,8 +51,38 @@ turrets = []
 
 # a list with image names
 enemy_images = ["person1", "person2", "person3", "person4"]
-# an empty to hold enemy actors
+# an empty list to hold enemy actors
 enemies = []
+
+
+def add_enemy():
+    # get a random image from the enemy image list
+    random_enemy = random.choice(enemy_images)
+    # create an enemy actor
+    enemy = Actor(random_enemy)
+    enemy.x = 250
+    enemy.y = 1000
+    enemy.angle = 90
+    enemy.collided = False
+    # add this to the enemy list
+    enemies.append(enemy)
+    clock.unschedule(add_enemy)
+    # debug to check size of enemy list
+    # print(len(enemies))
+
+
+def move_enemies():
+    for enemy in enemies:
+        for rect in WAYPOINTS:
+            if enemy.colliderect(rect["rect"]):
+                enemy.angle = rect["angle"]
+        # if enemy.x == 250 and 700 < enemy.y < 750:
+        #     # point to the right
+        #     enemy.angle = 0
+        # elif enemy.pos == (700, 725):
+        #     # point up
+        #     enemy.angle = 90
+        enemy.move_forward(3)
 
 
 # turret needs a range, bullet list
@@ -60,6 +94,7 @@ def create_turret():
     turrets.append(turret)
 
 
+#______________________________________________________#
 # built in only runs when any mouse button is pressed (event handler)
 def on_mouse_down(pos):
     print(pos)
@@ -74,11 +109,15 @@ def draw():
         enemy.draw()
     for base in bases:
         base.draw()
+    for rect in WAYPOINTS:
+        screen.draw.filled_rect(rect["rect"], "red")
 
 
 # main built in too pygame zero runs 60 a second
 def update():
-    pass
+    # runs the function once per second
+    clock.schedule(add_enemy, 1.0)
+    move_enemies()
 
 
 pgzrun.go()
