@@ -11,11 +11,6 @@ TITLE = "Tower Defense"
 # Create actors
 floor = Actor("td1920x1080")
 
-WAYPOINTS = [
-    {"rect": Rect(200, 700, 200, 50), "angle": 0},
-    {"rect": Rect(700, 700, 50, 200), "angle": 90},
-]
-
 
 def is_on_path(x, y):
     if 110 < x < 380 and 570 < y < 1080:
@@ -73,15 +68,7 @@ def add_enemy():
 
 def move_enemies():
     for enemy in enemies:
-        for rect in WAYPOINTS:
-            if enemy.colliderect(rect["rect"]):
-                enemy.angle = rect["angle"]
-        # if enemy.x == 250 and 700 < enemy.y < 750:
-        #     # point to the right
-        #     enemy.angle = 0
-        # elif enemy.pos == (700, 725):
-        #     # point up
-        #     enemy.angle = 90
+        
         enemy.move_forward(3)
 
 
@@ -94,7 +81,7 @@ def create_turret():
     turrets.append(turret)
 
 
-#______________________________________________________#
+# ______________________________________________________ #
 # built in only runs when any mouse button is pressed (event handler)
 def on_mouse_down(pos):
     print(pos)
@@ -109,8 +96,6 @@ def draw():
         enemy.draw()
     for base in bases:
         base.draw()
-    for rect in WAYPOINTS:
-        screen.draw.filled_rect(rect["rect"], "red")
 
 
 # main built in too pygame zero runs 60 a second
