@@ -58,7 +58,6 @@ def add_enemy():
     enemy.x = 250
     enemy.y = 1000
     enemy.angle = 90
-    enemy.collided = False
     # add this to the enemy list
     enemies.append(enemy)
     clock.unschedule(add_enemy)
@@ -68,7 +67,6 @@ def add_enemy():
 
 def move_enemies():
     for enemy in enemies:
-        
         enemy.move_forward(3)
 
 
@@ -98,7 +96,7 @@ def draw():
         base.draw()
 
 
-# main built in too pygame zero runs 60 a second
+# main built in to pygame zero runs 60 a second
 def update():
     # runs the function once per second
     clock.schedule(add_enemy, 1.0)
