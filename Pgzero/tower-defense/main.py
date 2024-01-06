@@ -49,6 +49,14 @@ enemy_images = ["person1", "person2", "person3", "person4"]
 # an empty list to hold enemy actors
 enemies = []
 
+# Rectangles to check enemy and turn them when we collide
+# Rect(xpos, ypos, width, height)
+rect1 = Rect(200, 650, 200, 30)
+rect2 = Rect(720, 625, 30, 200)
+rect3 = Rect(600, 200, 500, 20)
+rect4 = Rect(1200, 220, 30, 200)
+rect5 = Rect(1100, 550, 200, 20)
+
 
 def add_enemy():
     # get a random image from the enemy image list
@@ -67,6 +75,21 @@ def add_enemy():
 
 def move_enemies():
     for enemy in enemies:
+        if enemy.colliderect(rect1):
+            # turn the enemy (angle attribute)
+            enemy.angle = 0
+        elif enemy.colliderect(rect2):
+            # turn the enemy
+            enemy.angle = 90
+        elif enemy.colliderect(rect3):
+            # turn the enemy
+            enemy.angle = 0
+        elif enemy.colliderect(rect4):
+            # turn the enemy
+            enemy.angle = -90
+        elif enemy.colliderect(rect5):
+            # turn the enemy
+            enemy.angle = 0
         enemy.move_forward(3)
 
 
@@ -75,14 +98,22 @@ def create_turret():
     # create a turret actor
     turret = Actor("turret_green")
     turret.bullets = []
+    turret.range = Rect(turret.x, turret.y, 200, 200)
     # add the turret actor to the turrets list
     turrets.append(turret)
+    return turret
 
 
 # _______________PGzero built in functions__________________________________ #
 # built in only runs when any mouse button is pressed (event handler)
 def on_mouse_down(pos):
-    print(pos)
+    # print(pos)
+    for base in bases:
+        # checks if the base is clicked
+        if base.collidepoint(pos):
+            turret = create_turret()
+            turret.pos = base.pos
+            turret.range.center = base.pos
 
 
 # draw function built in to pgzero
@@ -90,10 +121,17 @@ def draw():
     floor.draw()
     for turret in turrets:
         turret.draw()
+        screen.draw.rect(turret.range, "blue")
     for enemy in enemies:
         enemy.draw()
     for base in bases:
         base.draw()
+
+    # screen.draw.filled_rect(rect1, "red")
+    # screen.draw.filled_rect(rect2, "red")
+    # screen.draw.filled_rect(rect3, "red")
+    # screen.draw.filled_rect(rect4, "red")
+    # screen.draw.filled_rect(rect5, "red")
 
 
 # main built in to pygame zero runs 60 a second
