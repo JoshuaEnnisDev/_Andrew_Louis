@@ -93,12 +93,25 @@ def move_enemies():
         enemy.move_forward(3)
 
 
+# checks if enemy is in range of turret
+def enemy_in_range():
+    for turret in turrets:
+        for enemy in enemies:
+            if enemy.colliderect(turret.range):
+                print("in range")
+                turret.point_towards(enemy)
+                # create a bullet
+                bullet = Actor("fire4")
+                bullet.pos = turret.pos
+                turret.bullets.append(bullet)
+
+
 # turret needs a range, bullet list
 def create_turret():
     # create a turret actor
     turret = Actor("turret_green")
     turret.bullets = []
-    turret.range = Rect(turret.x, turret.y, 200, 200)
+    turret.range = Rect(turret.x, turret.y, 400, 400)
     # add the turret actor to the turrets list
     turrets.append(turret)
     return turret
@@ -122,6 +135,8 @@ def draw():
     for turret in turrets:
         turret.draw()
         screen.draw.rect(turret.range, "blue")
+        for bullet in turret.bullets:
+            bullet.draw()
     for enemy in enemies:
         enemy.draw()
     for base in bases:
@@ -139,6 +154,8 @@ def update():
     # runs the function once per second
     clock.schedule(add_enemy, 1.0)
     move_enemies()
+    enemy_in_range()
 
 
 pgzrun.go()
+
