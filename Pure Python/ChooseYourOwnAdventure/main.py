@@ -1,14 +1,14 @@
-
+# flake8: noqa
 
 # Data types
-    # String -- anything inside quotes 
+# String -- anything inside quotes
 
 # function to display text on the screen
 print("Choose your own adventure")
 
 
 # function that allows the user to type into the program
-name = input("What is your name? ") 
+name = input("What is your name? ")
 
 # words without quotes are variables
 # variables store data and they give data meaning
